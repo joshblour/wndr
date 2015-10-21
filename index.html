@@ -3,104 +3,108 @@
 <head></head>
 <body>
 <script type="text/javascript">
-/// / KUDOS: http://stackoverflow.com/a/8237102/1202726
-// // if iPod / iPhone, display install app prompt
-// var redirect_url = 'http://www.wandertheapp.com';
-// if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i))  {
-//   var store_loc = "https://itunes.apple.com/app/id982264776";
-//   if (location.hash) {
-//     var app_loc = "wander://" + location.hash.substring(1);
-// 	var timeout;
-//
-// 	function preventPopup() {
-// 	    clearTimeout(timeout);
-// 	    timeout = null;
-// 	    window.removeEventListener('pagehide', preventPopup);
-// 	}
-//
-// 	function openApp() {
-// 	    if(/OS [2-8]_\d(_\d)? like Mac OS X/i.test(navigator.userAgent)) {
-// 	        // iOS 2-8
-// 	        var iframe = document.createElement("iframe");
-// 	        iframe.src = app_loc;
-// 	        document.body.appendChild(iframe);
-// 	    } else {
-// 	        // iOS 9 or Newer
-// 			window.location.href = app_loc;
-// 	    }
-//
-// 	    timeout = setTimeout(function() {
-// 	            document.location = store_loc;
-// 	    }, 500);
-// 	    window.addEventListener('pagehide', preventPopup);
-// 	}
-//
-// 	openApp();
-//
-//   } else {
-//     window.location = redirect_url;
-//   }
-// } else {
-//   window.location = redirect_url;
-// }
+// KUDOS: http://stackoverflow.com/a/8237102/1202726
+// KUDOS: http://aawaara.com/post/88310470252/smallest-piece-of-code-thats-going-to-change-the
 
-var custom = "wander://add";
-var alt = "http://www.wandertheapp.com";
-var g_intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;end";
-var timer;
-var heartbeat;
-var iframe_timer;
+var redirect_url = 'http://www.wandertheapp.com';
+if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
+    navigator.userAgent.match(/android/i) )  {
+  var store_loc = "https://itunes.apple.com/app/id982264776";
+  if (location.hash) {
+    var app_loc = "wander://" + location.hash.substring(1);
+	var timeout;
+	var g_intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;S.browser_fallback_url=http%3A%2F%2Fwww.wandertheapp.com;end";
+	var timer;
+	var heartbeat;
+	var iframe_timer;
 
-function clearTimers() {
-    clearTimeout(timer);
-    clearTimeout(heartbeat);
-    clearTimeout(iframe_timer);
+	
+	function preventPopup() {
+	    clearTimeout(timeout);
+	    timeout = null;
+	    window.removeEventListener('pagehide', preventPopup);
+	}
+	
+	function clearTimers() {
+	    clearTimeout(timer);
+	    clearTimeout(heartbeat);
+	    clearTimeout(iframe_timer);
+	}
+
+	function intervalHeartbeat() {
+	    if (document.webkitHidden || document.hidden) {
+	        clearTimers();
+	    }
+	}
+
+	function tryIframeApproach() {
+	    var iframe = document.createElement("iframe");
+	    iframe.style.border = "none";
+	    iframe.style.width = "1px";
+	    iframe.style.height = "1px";
+	    iframe.onload = function () {
+	        document.location = redirect_url;
+	    };
+	    iframe.src = app_loc;
+	    document.body.appendChild(iframe);
+	}
+
+	function tryWebkitApproach() {
+	    document.location = app_loc;
+	    timer = setTimeout(function () {
+	        document.location = redirect_url;
+	    }, 2500);
+	}
+
+	function useIntent() {
+	    document.location = g_intent;
+	}
+
+	function openAppAndroid() {
+	    heartbeat = setInterval(intervalHeartbeat, 200);
+	    if (navigator.userAgent.match(/Chrome/)) {
+	        useIntent();
+	    } else if (navigator.userAgent.match(/Firefox/)) {
+	        tryWebkitApproach();
+	        iframe_timer = setTimeout(function () {
+	            tryIframeApproach();
+	        }, 1500);
+	    } else {
+	        tryIframeApproach();
+	    }
+	}
+
+	function openAppios() {
+	    if(/OS [2-8]_\d(_\d)? like Mac OS X/i.test(navigator.userAgent)) {
+	        // iOS 2-8
+	        var iframe = document.createElement("iframe");
+	        iframe.src = app_loc;
+	        document.body.appendChild(iframe);
+	    } else {
+	        // iOS 9 or Newer
+			window.location.href = app_loc;
+	    }
+
+	    timeout = setTimeout(function() {
+	            document.location = store_loc;
+	    }, 500);
+	    window.addEventListener('pagehide', preventPopup);
+	}
+	
+	
+    if (navigator.userAgent.match(/android/i)) {
+		openAppAndroid();
+	} else {
+		openAppios();
+	}
+	
+  } else {
+    window.location = redirect_url;
+  }
+} else {
+  window.location = redirect_url;
 }
 
-function intervalHeartbeat() {
-    if (document.webkitHidden || document.hidden) {
-        clearTimers();
-    }
-}
-
-function tryIframeApproach() {
-    var iframe = document.createElement("iframe");
-    iframe.style.border = "none";
-    iframe.style.width = "1px";
-    iframe.style.height = "1px";
-    iframe.onload = function () {
-        document.location = alt;
-    };
-    iframe.src = custom;
-    document.body.appendChild(iframe);
-}
-
-function tryWebkitApproach() {
-    document.location = custom;
-    timer = setTimeout(function () {
-        document.location = alt;
-    }, 2500);
-}
-
-function useIntent() {
-    document.location = g_intent;
-}
-
-function launch_app_or_alt_url(el) {
-    heartbeat = setInterval(intervalHeartbeat, 200);
-    if (navigator.userAgent.match(/Chrome/)) {
-        useIntent();
-    } else if (navigator.userAgent.match(/Firefox/)) {
-        tryWebkitApproach();
-        iframe_timer = setTimeout(function () {
-            tryIframeApproach();
-        }, 1500);
-    } else {
-        tryIframeApproach();
-    }
-}
-
-    launch_app_or_alt_url();
 
 </script>
 Opening app...
