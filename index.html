@@ -18,12 +18,16 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
 	    window.removeEventListener('pagehide', preventPopup);
 	}
 
-	function openApp() {    
-        // var iframe = document.createElement("iframe");
-        // iframe.src = app_loc;
-        // document.body.appendChild(iframe);
-
-		window.location.href = app_loc;
+	function openApp() {
+	    if(/OS [2-8]_\d(_\d)? like Mac OS X/i.test(navigator.userAgent)) {  
+	        // iOS 2-8
+	        var iframe = document.createElement("iframe");
+	        iframe.src = app_loc;
+	        document.body.appendChild(iframe);
+	    } else {
+	        // iOS 9 or Newer
+			window.location.href = app_loc;
+	    }
 
 	    timeout = setTimeout(function() {
 	            document.location = store_loc;
@@ -36,77 +40,11 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
   } else {
     window.location = redirect_url;
   }
-} //else {
-//   window.location = redirect_url;
-// }
+} else {
+  window.location = redirect_url;
+}
 
 </script>
-Opening app..
-<!--<script type="text/javascript">
-    var custom = "wander://";
-    var alt = "http://www.wandertheapp.com";
-    var g_intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;S.browser_fallback_url=http%3A%2F%2Fwww.wandertheapp.com;end";
-    var timer;
-    var heartbeat;
-    var iframe_timer;
-
-    function clearTimers() {
-        clearTimeout(timer);
-        clearTimeout(heartbeat);
-        clearTimeout(iframe_timer);
-    }
-
-    function intervalHeartbeat() {
-        if (document.webkitHidden || document.hidden) {
-            clearTimers();
-        }
-    }
-
-    function tryIframeApproach() {
-        var iframe = document.createElement("iframe");
-        iframe.style.border = "none";
-        iframe.style.width = "1px";
-        iframe.style.height = "1px";
-        iframe.onload = function () {
-            document.location = alt;
-        };
-        iframe.src = custom;
-        document.body.appendChild(iframe);
-    }
-
-    function tryWebkitApproach() {
-        document.location = custom;
-        timer = setTimeout(function () {
-            document.location = alt;
-        }, 2500);
-    }
-
-    function useIntent() {
-        document.location = g_intent;
-    }
-
-    function launch_app_or_alt_url() {
-		if (location.hash) {
-			custom = custom + location.hash.substring(1);
-		}
-
-        heartbeat = setInterval(intervalHeartbeat, 200);
-        if (navigator.userAgent.match(/Chrome/)) {
-            useIntent();
-        } else if (navigator.userAgent.match(/Firefox/)) {
-            tryWebkitApproach();
-            iframe_timer = setTimeout(function () {
-                tryIframeApproach();
-            }, 1500);
-        } else {
-            tryIframeApproach();
-        }
-    }
-
-
-    launch_app_or_alt_url();
-</script>
-Loading... -->
-
+Opening app...
 </body>
 </html>
