@@ -15,8 +15,8 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
   if (location.hash) {
     var app_loc = "wander://" + location.hash.substring(1);
     if (is_android) {
-      	var intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;S.browser_fallback_url=http%3A%2F%2Fitunes.apple.com/app/id982264776;end"
-		window.location = intent;
+      	var intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;end"
+		document.location = intent;
     } else {
       var loadDateTime = new Date();
       window.setTimeout(function() {
