@@ -1,19 +1,118 @@
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="refresh" content="1; url=http://www.wandertheapp.com">
-    <title>Redirecting..</title>
-    <script>
-    function tryOpenApp() {
-                var iframe = document.createElement("iframe");
-                iframe.style.border = "none";
-                iframe.style.width = "1px";
-                iframe.style.height = "1px";
-                iframe.src = "wander://add";
-                document.body.appendChild(iframe);
+<script type="text/javascript">
+// KUDOS: http://stackoverflow.com/a/8237102/1202726
+// if iPod / iPhone, display install app prompt
+var redirect_url = 'http://www.wandertheapp.com';
+if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
+    navigator.userAgent.match(/android/i)) {
+  var store_loc = "https://itunes.apple.com/app/id982264776";
+  // var href = "/iphone/";
+  var is_android = false;
+  if (navigator.userAgent.match(/android/i)) {
+    store_loc = "https://itunes.apple.com/app/id982264776";
+    // href = "/android/";
+    is_android = true;
+  }
+  if (location.hash) {
+    var app_loc = "wander://" + location.hash.substring(1);
+    if (is_android) {
+      	var intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;end"
+		window.location = intent;
+    } else {
+
+		var timeout;
+
+		function preventPopup() {
+		    clearTimeout(timeout);
+		    timeout = null;
+		    window.removeEventListener('pagehide', preventPopup);
+		}
+
+		function openApp() {    
+            var iframe = document.createElement("iframe");
+            iframe.style.display = "none";
+            iframe.src = app_loc;
+            document.body.appendChild(iframe);
+
+		    timeout = setTimeout(function() {
+		            document.location = store_loc;
+		    }, 500);
+		    window.addEventListener('pagehide', preventPopup);
+		} 
+		
+		openApp();
+		
     }
-    </script>
-  </head>
-  <body onload="tryOpenApp()">
-  </body>
-</html>
+  } else {
+    window.location = redirect_url;
+  }
+} //else {
+//   window.location = redirect_url;
+// }
+
+</script>
+Opening app..
+<!--<script type="text/javascript">
+    var custom = "wander://";
+    var alt = "http://www.wandertheapp.com";
+    var g_intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;S.browser_fallback_url=http%3A%2F%2Fwww.wandertheapp.com;end";
+    var timer;
+    var heartbeat;
+    var iframe_timer;
+
+    function clearTimers() {
+        clearTimeout(timer);
+        clearTimeout(heartbeat);
+        clearTimeout(iframe_timer);
+    }
+
+    function intervalHeartbeat() {
+        if (document.webkitHidden || document.hidden) {
+            clearTimers();
+        }
+    }
+
+    function tryIframeApproach() {
+        var iframe = document.createElement("iframe");
+        iframe.style.border = "none";
+        iframe.style.width = "1px";
+        iframe.style.height = "1px";
+        iframe.onload = function () {
+            document.location = alt;
+        };
+        iframe.src = custom;
+        document.body.appendChild(iframe);
+    }
+
+    function tryWebkitApproach() {
+        document.location = custom;
+        timer = setTimeout(function () {
+            document.location = alt;
+        }, 2500);
+    }
+
+    function useIntent() {
+        document.location = g_intent;
+    }
+
+    function launch_app_or_alt_url() {
+		if (location.hash) {
+			custom = custom + location.hash.substring(1);
+		}
+
+        heartbeat = setInterval(intervalHeartbeat, 200);
+        if (navigator.userAgent.match(/Chrome/)) {
+            useIntent();
+        } else if (navigator.userAgent.match(/Firefox/)) {
+            tryWebkitApproach();
+            iframe_timer = setTimeout(function () {
+                tryIframeApproach();
+            }, 1500);
+        } else {
+            tryIframeApproach();
+        }
+    }
+
+
+    launch_app_or_alt_url();
+</script>
+Loading... -->
