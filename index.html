@@ -34,10 +34,12 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
 		    .appendTo('body');
 
 		    timeout = setTimeout(function() {
-		            document.location = store_loc;
+		            window.open(store_loc, "_system" ); 
 		    }, 500);
 		    window.addEventListener('pagehide', preventPopup);
 		} 
+		
+		openApp();
 		
     }
   } else {
