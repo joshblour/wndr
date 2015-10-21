@@ -3,20 +3,22 @@
 if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
     navigator.userAgent.match(/android/i)) {
   var store_loc = "https://itunes.apple.com/app/id982264776";
-  var href = "/iphone/";
+  // var href = "/iphone/";
   var is_android = false;
   if (navigator.userAgent.match(/android/i)) {
     store_loc = "https://itunes.apple.com/app/id982264776";
-    href = "/android/";
+    // href = "/android/";
     is_android = true;
   }
   if (location.hash) {
-    var app_loc = "wander://" + location.hash.substring(2);
+    var app_loc = "wander://" + location.hash.substring(1);
     if (is_android) {
       var w = null;
+	  var error = null;
       try {
         w = window.open(app_loc, '_blank');
       } catch (e) {
+		  error = e;
         // no exception
       }
       if (w) { window.close(); }
@@ -33,7 +35,7 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
       window.location = app_loc;
     }
   } else {
-    location.href = href;
+    window.location = 'http://www.wandertheapp.com';
   }
 }
 </script>
