@@ -1,5 +1,7 @@
 <script type="text/javascript">
+// KUDOS: http://stackoverflow.com/a/8237102/1202726
 // if iPod / iPhone, display install app prompt
+var redirect_url = 'http://www.wandertheapp.com';
 if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
     navigator.userAgent.match(/android/i)) {
   var store_loc = "https://itunes.apple.com/app/id982264776";
@@ -35,8 +37,11 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
       window.location = app_loc;
     }
   } else {
-    window.location = 'http://www.wandertheapp.com';
+    window.location = redirect_url;
   }
+} else {
+  window.location = redirect_url;
 }
+
 </script>
 hello worlds
