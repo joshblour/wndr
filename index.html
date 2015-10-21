@@ -16,17 +16,29 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
     var app_loc = "wander://" + location.hash.substring(1);
     if (is_android) {
       	var intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;end"
-		document.location = intent;
+		window.location = intent;
     } else {
-      var loadDateTime = new Date();
-      window.setTimeout(function() {
-        var timeOutDateTime = new Date();
-        if (timeOutDateTime - loadDateTime < 5000) {
-          window.location = store_loc;
-        } else { window.close(); }
-      },
-      25);
-      window.location = app_loc;
+
+		var timeout;
+
+		function preventPopup() {
+		    clearTimeout(timeout);
+		    timeout = null;
+		    window.removeEventListener('pagehide', preventPopup);
+		}
+
+		function openApp() {    
+		    $('<iframe />')
+		    .attr('src', app_loc)
+		    .attr('style', 'display:none;')
+		    .appendTo('body');
+
+		    timeout = setTimeout(function() {
+		            document.location = store_loc;
+		    }, 500);
+		    window.addEventListener('pagehide', preventPopup);
+		} 
+		
     }
   } else {
     window.location = redirect_url;
