@@ -14,16 +14,10 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
   }
   if (location.hash) {
     var app_loc = "wander://" + location.hash.substring(1);
-    // if (is_android) {
-    //   var w = null;
-    //   try {
-    //     w = window.open(app_loc, '_blank');
-    //   } catch (e) {
-    //     // no exception
-    //   }
-    //   if (w) { window.close(); }
-    //   else { window.location = store_loc; }
-    // } else {
+    if (is_android) {
+      	var intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;S.browser_fallback_url=http%3A%2F%2Fitunes.apple.com/app/id982264776;end"
+		window.location = intent;
+    } else {
       var loadDateTime = new Date();
       window.setTimeout(function() {
         var timeOutDateTime = new Date();
@@ -33,13 +27,78 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
       },
       25);
       window.location = app_loc;
-    // }
+    }
   } else {
     window.location = redirect_url;
   }
-} else {
-  window.location = redirect_url;
-}
+} //else {
+//   window.location = redirect_url;
+// }
 
 </script>
-hello worlds
+Opening app..
+<!--<script type="text/javascript">
+    var custom = "wander://";
+    var alt = "http://www.wandertheapp.com";
+    var g_intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;S.browser_fallback_url=http%3A%2F%2Fwww.wandertheapp.com;end";
+    var timer;
+    var heartbeat;
+    var iframe_timer;
+
+    function clearTimers() {
+        clearTimeout(timer);
+        clearTimeout(heartbeat);
+        clearTimeout(iframe_timer);
+    }
+
+    function intervalHeartbeat() {
+        if (document.webkitHidden || document.hidden) {
+            clearTimers();
+        }
+    }
+
+    function tryIframeApproach() {
+        var iframe = document.createElement("iframe");
+        iframe.style.border = "none";
+        iframe.style.width = "1px";
+        iframe.style.height = "1px";
+        iframe.onload = function () {
+            document.location = alt;
+        };
+        iframe.src = custom;
+        document.body.appendChild(iframe);
+    }
+
+    function tryWebkitApproach() {
+        document.location = custom;
+        timer = setTimeout(function () {
+            document.location = alt;
+        }, 2500);
+    }
+
+    function useIntent() {
+        document.location = g_intent;
+    }
+
+    function launch_app_or_alt_url() {
+		if (location.hash) {
+			custom = custom + location.hash.substring(1);
+		}
+
+        heartbeat = setInterval(intervalHeartbeat, 200);
+        if (navigator.userAgent.match(/Chrome/)) {
+            useIntent();
+        } else if (navigator.userAgent.match(/Firefox/)) {
+            tryWebkitApproach();
+            iframe_timer = setTimeout(function () {
+                tryIframeApproach();
+            }, 1500);
+        } else {
+            tryIframeApproach();
+        }
+    }
+
+
+    launch_app_or_alt_url();
+</script>
+Loading... -->
