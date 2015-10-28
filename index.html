@@ -11,7 +11,11 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i) ||
     navigator.userAgent.match(/android/i) )  {
   var store_loc = "https://itunes.apple.com/app/id982264776";
   if (location.hash) {
-    var app_loc = "wander://" + location.hash.substring(1);
+	var uuid = location.search.substring(1);
+	var username = location.hash.substring(1); 
+    var app_loc = "wander://" + uuid;
+	if (username.length > 0)
+		app_loc = app_loc + "/" + username;
 	var timeout;
 	var g_intent = "intent://scan/#Intent;scheme=wander;package=com.joshblour.proximator.android;S.browser_fallback_url=http%3A%2F%2Fwww.wandertheapp.com;end";
 	var timer;
